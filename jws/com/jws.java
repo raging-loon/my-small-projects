@@ -5,16 +5,58 @@ import com.httpRequest;
 import java.io.*;
 import java.net.*;
 
+/* TODOS
+ *  - Add SSL/TLS support
+ *  - Add security, request, and error logging
+ */
+
+
 public class jws{
 
   private static jwsConfig mainConfiguration;  
   private static ServerSocket server;
+  private static String configFilePath = "jws.conf";
+  
+  private static void printHelp(){
+    System.err.println("Usage: java com.jws [optional]");
+    System.err.println("\t-c <config>\tspecify config path to use");
+    System.err.println("\t-v, --version\tprint version");
+    System.err.println("\t-h, --help\tprint this message");
 
+    System.exit(0);
+
+  }
+
+  private static void printVersion(){
+    System.err.println("JWS - Java Web Server v1.0.0");
+    System.exit(0);
+  }
+
+  private static void parseCMDArgs(String[] args){
+    
+    for(int i = 0; i < args.length; i++){
+      if(args[i].equals("-c")){
+        if(i + 1 > args.length){
+          System.err.println("-c requires and argument");
+          System.exit(1);
+        } else {
+          configFilePath = args[++i];
+        }
+      }
+
+      else if(args[i].matches("-v|--version"))
+        printVersion();
+      else if(args[i].matches("-h|--help"))
+        printHelp();
+    }
+
+  }
 
   public static void main(String[] args) {
-    
+    parseCMDArgs(args);
+
     mainConfiguration = new jwsConfig();
-    mainConfiguration.parseConfigurationFile("jws.conf");
+    mainConfiguration.parseConfigurationFile(configFilePath);
 
     
     try{

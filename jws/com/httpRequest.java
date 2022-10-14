@@ -1,5 +1,7 @@
 package com;
 import com.InvalidHttpRequest;
+
+
 public class httpRequest {
   private String[] requestBuffer;
 
@@ -33,7 +35,9 @@ public class httpRequest {
     }
 
     verb = parseVerb(requestLineBuf[0]);
-    
+    filePath = requestLineBuf[1];
+
+    // TODO add HTTP protocol testing
 
   }
 
@@ -45,5 +49,12 @@ public class httpRequest {
        throw new InvalidHttpRequest();
     }
   }
+
+
+  // Getters
+
+  public httpVerb getHTTPVerb(){ return this.verb; }
+  public String getFilePath() { return this.filePath; }
+
 
 }

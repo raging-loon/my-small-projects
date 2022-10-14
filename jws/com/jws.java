@@ -60,6 +60,12 @@ public class jws{
   }
   private static void handleRequest(Socket client, String input){
     httpRequest request = new httpRequest(input);
+
+    try{
+      request.parseHttp();
+    } catch (InvalidHttpRequest e){
+      System.out.println("Invalid HTTP request received. TODO Log");
+    }
     
   }
 

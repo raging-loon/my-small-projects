@@ -4,6 +4,7 @@ import com.jwsConfig.*;
 import com.httpRequest;
 import java.io.*;
 import java.net.*;
+import java.util.Date;
 
 /* TODOS
  *  - Add SSL/TLS support
@@ -57,7 +58,8 @@ public class jws{
 
     mainConfiguration = new jwsConfig();
     mainConfiguration.parseConfigurationFile(configFilePath);
-
+    Date date = new Date();
+    System.out.println("Server starting at: " + date.toString());
     
     try{
       server = new ServerSocket(mainConfiguration.getListenPort());
@@ -123,7 +125,7 @@ public class jws{
         return;
     }
     req.parseRequest(request);
-    
+
     req.runHandler(client, input);
 
 

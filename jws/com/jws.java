@@ -102,13 +102,32 @@ public class jws{
   }
   private static void handleRequest(Socket client, String input){
     httpRequest request = new httpRequest(input);
-
     try{
       request.parseHttp();
     } catch (InvalidHttpRequest e){
       System.out.println("Invalid HTTP request received. TODO Log");
+      return;
     }
     
+
+    requestHandler req = null;
+
+    switch(request.getHTTPVerb())
+    {
+      case HTTPGet:
+        req = new getRequestHandler(request.getFilePath());
+        break;
+
+      default:
+        System.out.println("Unknown HTTP Verb: " + request.getHTTPVerb());
+        return;
+    }
+    req.parseRequest(request);
+    
+    req.runHandler(client, input);
+
+
+
   }
 
 

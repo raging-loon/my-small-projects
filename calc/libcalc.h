@@ -21,16 +21,22 @@ typedef enum{
 typedef struct token
 {
   token_t type;
-  char value[16];
   struct token * next;
+  double value;  
 } token;
 
 extern token * token_list;
 extern token * head;
 extern token * current;
 
-void add_new_token(token_t tok, const char * val);
+void insert_token(token_t tok, const char * val);
 
+int get_length();
 
+void reverse_list(token ** head_ref);
+
+void free_token_list();
+
+void debug_print_list();
 
 #endif // LIBCALC_H

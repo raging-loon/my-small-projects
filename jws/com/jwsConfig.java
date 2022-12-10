@@ -90,9 +90,10 @@ public class jwsConfig {
     }
   }
 
-  private void setRootDirectory(String path){
-    this.rootDirectory = path;
-  }
+  private void setRootDirectory(String path){ this.rootDirectory = path; }
+
+  public String getRootDirectory() { return this.rootDirectory; }
+
 
   private void setBlockedIPList(String ipList){
     String list = ipList.substring(ipList.indexOf("[") + 1, ipList.indexOf("]"));

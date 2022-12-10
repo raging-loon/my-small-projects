@@ -16,8 +16,10 @@ public class jws{
 
   private static jwsConfig mainConfiguration;  
   private static ServerSocket server;
+  private final static String jwsVersion = "1.0.0";
   private static String configFilePath = "jws.conf";
   
+
   private static void printHelp(){
     System.err.println("Usage: java com.jws [optional]");
     System.err.println("\t-c <config>\tspecify config path to use");
@@ -29,7 +31,7 @@ public class jws{
   }
 
   private static void printVersion(){
-    System.err.println("JWS - Java Web Server v1.0.0");
+    System.err.println("JWS - Java Web Server v" + jwsVersion);
     System.exit(0);
   }
 
@@ -58,16 +60,20 @@ public class jws{
 
     mainConfiguration = new jwsConfig();
     mainConfiguration.parseConfigurationFile(configFilePath);
-    Date date = new Date();
-    System.out.println("Server starting at: " + date.toString());
+    System.out.println("Server starting at: " + new Date().toString());
     
     try{
       server = new ServerSocket(mainConfiguration.getListenPort());
+      
       while(true){
         Socket clientSock = server.accept();
         String ipAddr = clientSock.getInetAddress().toString();
         ipAddr = ipAddr.substring(ipAddr.indexOf("/") + 1);
+      
+
         System.out.println("New connection " + ipAddr + ":" + clientSock.getPort());
+      
+      
         if(mainConfiguration.isBlockedIPAddr(ipAddr)){
           System.out.println("Blocking " + ipAddr + " based on configuration. TODO Implement logging");
           clientSock.close();
@@ -102,6 +108,8 @@ public class jws{
     }
     
   }
+
+
   private static void handleRequest(Socket client, String input){
     httpRequest request = new httpRequest(input);
     try{
@@ -124,6 +132,13 @@ public class jws{
         System.out.println("Unknown HTTP Verb: " + request.getHTTPVerb());
         return;
     }
+    
+    /**
+     * Take the data, send it to the requestHandler's parser,
+     * format it, then send it.
+     */
+
+
     req.parseRequest(request);
 
     req.runHandler(client, input);

@@ -3,12 +3,8 @@ Alien: Covenant
 American Hustle
 American Psycho
 Annihilation
-Anchorman
-Army of Darkness
 Atomic Blonde
 Avatar
-Bad Boys
-Bad Boys for Life
 The Bank Job
 Be Kind Rewind
 The Black Dahlia
@@ -16,30 +12,22 @@ Black Swan
 Blade Runner
 Blade Runner: 2049
 The Blues Brothers
-The Book of Eli
 The Boondock Saints
 Bridge of Spies
-Bright
 Brothers
 The Cabin in the Woods
-Carrie
 Cast Away
 Castle in the Sky
-Cell
 Children of Men
 Chronicle
 Cloud Atlas
-Click
-The Crazies
 Crimson Peak
 Death Proof
-Death Race
 Deja Vu
 Demolition Man
 The Departed
 Disturbing Behavior
 Django Unchained
-Doomsday
 Dracula
 Dunkirk
 Eastern Promises
@@ -48,32 +36,20 @@ Event Horizon
 The Evil Dead
 Evil Dead II
 Evolution
-Expendables
-Expendables II
-Expendables III
 Falling Down
 Fargo
 Fifth Element
-Flatliners
 Fletch
-Fracture
 Frequency
-Freeway
-From Hell
-Fried Green Tomatoes
 Funny Farm
 Funny People
-The Gate
 The Girl with All the Gifts
 The Grave of the Fireflies
 The Green Mile
 Hanna
 Hannibal Rising
 Heat
-Hereafter
 A History of Violence
-The Host
-Hostel
 Hot Fuzz
 Hotel Rwanda
 How I Live Now
@@ -81,43 +57,31 @@ Howl's Moving Castle
 Hudson Hawk
 The Hunt for Red October
 Identity Thief
-Impostor
-Into the Mouth of Madness
 Inception
 It
 It Part II
-THe Italian Job
 Jarhead
 Kill Bill
 Kill Bill Volume 2
-Lady Bird
 Lady in the Water
-Law Abiding Citizen
-Lawless
 Leon the Professional
 Lethal Weapon
 Lethal Weapon II
 Lethal Weapon III
 Lethal Weapon IV
 Les Miserables
-Life
-The Life Aquatic
 Logan
 The Lookout
 Looper
-Lord of Illusions
 Lord of War
-Lucky Number Slevin
 Lucy
 Machete
 Mad Max
 Magnificent Seven
-Max Payne
 Maverick
 The Mechanic
 Memento
 The Men Who Stare at Goats
-Morgan
 Mute
 Nightcrawler
 The Northman
@@ -127,46 +91,22 @@ Once Upon a Time in Hollywood
 Overlord
 Pan's Labyrinth
 The Patriot
-Payback
 Pet Sematary
-Point of No Return
 The Postman
-The Prestige
-Primer
 Princess Mononoke
 Prince of Persia
 Pulp Fiction
-Push
-Queen of the Damned
-Quick Change
-The Quick and the Dead
-Red
-Red II
-Red Sparrow
-Red Sonja
-Redemption
 Repo Men
-The Ref
-Conan the Barbarian
-Conan the Barbarian II
 The Road
-Roadhouse
 Robocop Old One
 Robocop New One
-Salt
-Sexy Evil Genius
 Shaun of the Dead
 The Signal
 Shutter Island
-Sin City
-Sin City II
 The Sixth Sense
 Stand By Me
 Stripes
-Stranger than Fiction
-Starship Troopers
 Sweeney Todd
-The Survivalist
 Surrogates
 Tenet
 The Terminator
@@ -174,15 +114,11 @@ They Live
 Tombstone
 Total Recall
 True Lies
-True Romance
 Troy
-Twins
 Unforgiven
 The Usual Suspects
 The Village
 The Visit
 Watchmen
-What Dreams May Come
-The World's End
 Your Name
 Weathering Without You

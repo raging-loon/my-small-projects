@@ -1,8 +1,10 @@
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -20,10 +22,15 @@ public class JTextEditor implements ActionListener {
 
   private JTextArea editorArea;
 
+  // save status
+  private boolean currentFileSaved = false;
+
+
+  private String currentlyOpenedFile = "";
   public JTextEditor(){
     mainWindow = new JFrame("JTextEditor - No File Opened");
 
-    //  set up our menues
+    //  set up our menus
     mainMenuBar = new JMenuBar();
     mainWindow.setJMenuBar(mainMenuBar);
 
@@ -61,7 +68,7 @@ public class JTextEditor implements ActionListener {
 
     }
     else if(e.getSource() == saveFileMenu){
-      System.out.println("User clicked on save menu");
+      saveFile();
     }
   }
 
@@ -79,6 +86,7 @@ public class JTextEditor implements ActionListener {
     if(fileContents != null){
       editorArea.setText(fileContents);
       mainWindow.setTitle("JTextEditor - " + fileName);
+      currentlyOpenedFile = fileName;
     }
   }
 
@@ -92,5 +100,30 @@ public class JTextEditor implements ActionListener {
 
     }
     return contents;
+  }
+
+  // todo: implement this
+  private void createFile(String filename){
+
+  }
+
+  private void dumpFileContents(){
+    try{
+      FileWriter fw = new FileWriter(currentlyOpenedFile);
+      fw.append(editorArea.getText());
+      fw.close();
+    } catch(Exception e){
+      JOptionPane.showMessageDialog(mainWindow, e.getMessage(), "Error opening" + currentlyOpenedFile, JOptionPane.ERROR_MESSAGE);
+    }
+  }
+
+  private void saveFile(){
+    if(currentlyOpenedFile == ""){
+      JOptionPane.showMessageDialog(null, "No file opened");
+      return; // todo: delete this when create file is implemented
+    }
+
+    dumpFileContents();
+
   }
 }

@@ -8,32 +8,30 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class JTextEditor implements ActionListener {
-  private JFrame mainWindow;
-
-  // menus
-  private JMenuBar mainMenuBar;
-
-  // file menu
-  private JMenu fileMenu;
-  private JMenuItem openFileMenu;
-  private JMenuItem saveFileMenu;
+  private final JFrame mainWindow;
+  private final JScrollPane editorScroller;
+  private final JMenuItem openFileMenu;
+  private final JMenuItem saveFileMenu;
 
 
-  private JTextArea editorArea;
+  private final JTextArea editorArea;
 
   // save status
   private boolean currentFileSaved = false;
 
-
+  private final EditorSettings settings;
   private String currentlyOpenedFile = "";
   public JTextEditor(){
     mainWindow = new JFrame("JTextEditor - No File Opened");
-
+    settings = new EditorSettings(this);
     //  set up our menus
-    mainMenuBar = new JMenuBar();
+
+    // menus
+    JMenuBar mainMenuBar = new JMenuBar();
     mainWindow.setJMenuBar(mainMenuBar);
 
-    fileMenu = new JMenu("File");
+    // file menu
+    JMenu fileMenu = new JMenu("File");
     openFileMenu = new JMenuItem("Open...");
     saveFileMenu = new JMenuItem("Save");
 
@@ -44,13 +42,14 @@ public class JTextEditor implements ActionListener {
     fileMenu.add(saveFileMenu);
 
     mainMenuBar.add(fileMenu);
-
+    mainMenuBar.add(settings.getSettingsMenu());
     // set up the editor
 
     editorArea = new JTextArea();
 
     editorArea.setFont(new Font("SansSerif.plain",Font.PLAIN, 12));
-    mainWindow.add(new JScrollPane(editorArea));
+    editorScroller = new JScrollPane(editorArea);
+    mainWindow.add(editorScroller);
 
 
   }
@@ -62,12 +61,19 @@ public class JTextEditor implements ActionListener {
   }
 
   public void actionPerformed(ActionEvent e){
-    if(e.getSource() == openFileMenu){
-      openNewFile();
+    Object source = e.getSource();
 
-    }
-    else if(e.getSource() == saveFileMenu){
-      saveFile();
+    if(source instanceof JMenuItem){
+      if(e.getSource() == openFileMenu){
+        openNewFile();
+
+      }
+      else if(e.getSource() == saveFileMenu){
+        saveFile();
+      } else {
+        settings.actionPerformed(e);
+      }
+
     }
   }
 
@@ -86,6 +92,7 @@ public class JTextEditor implements ActionListener {
       editorArea.setText(fileContents);
       mainWindow.setTitle("JTextEditor - " + fileName);
       currentlyOpenedFile = fileName;
+      editorScroller.getVerticalScrollBar().setValue(0);
     }
   }
 
@@ -95,16 +102,14 @@ public class JTextEditor implements ActionListener {
     try{
       contents = Files.readString(Path.of(filename));
     } catch(Exception e){
-      JOptionPane.showMessageDialog(null,"Failed to read" + filename, "Error",JOptionPane.ERROR_MESSAGE);
+      JOptionPane.showMessageDialog(null,"Failed to read " + filename, "Error",JOptionPane.ERROR_MESSAGE);
 
     }
     return contents;
   }
 
-  // todo: implement this
   private void createFile(){
     String folderName;
-    String fullPath;
 
 
     JFileChooser jfc = new JFileChooser();
@@ -137,7 +142,7 @@ public class JTextEditor implements ActionListener {
   }
 
   private void saveFile(){
-    if(currentlyOpenedFile == ""){
+    if(currentlyOpenedFile.equals("")){
       createFile();
     }
 

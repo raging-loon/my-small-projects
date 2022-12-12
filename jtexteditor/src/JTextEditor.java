@@ -92,7 +92,7 @@ public class JTextEditor implements ActionListener {
       editorArea.setText(fileContents);
       mainWindow.setTitle("JTextEditor - " + fileName);
       currentlyOpenedFile = fileName;
-      editorScroller.getVerticalScrollBar().setValue(0);
+      
     }
   }
 

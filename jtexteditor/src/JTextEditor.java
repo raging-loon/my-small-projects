@@ -3,7 +3,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -51,7 +50,7 @@ public class JTextEditor implements ActionListener {
     editorArea = new JTextArea();
 
     editorArea.setFont(new Font("SansSerif.plain",Font.PLAIN, 12));
-    mainWindow.add(editorArea);
+    mainWindow.add(new JScrollPane(editorArea));
 
 
   }
@@ -103,7 +102,25 @@ public class JTextEditor implements ActionListener {
   }
 
   // todo: implement this
-  private void createFile(String filename){
+  private void createFile(){
+    String folderName;
+    String fullPath;
+
+
+    JFileChooser jfc = new JFileChooser();
+    jfc.setDialogTitle("Choose a folder");
+    jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+    int retval = jfc.showSaveDialog(null);
+    if(retval == JFileChooser.APPROVE_OPTION){
+      folderName = jfc.getSelectedFile().getAbsolutePath();
+
+      String filename = JOptionPane.showInputDialog("Enter a filename: ");
+
+      JOptionPane.showMessageDialog(null, folderName + filename);
+      if(!folderName.endsWith("/")) folderName += "/";
+      currentlyOpenedFile = folderName + filename;
+    }
 
   }
 
@@ -113,14 +130,15 @@ public class JTextEditor implements ActionListener {
       fw.append(editorArea.getText());
       fw.close();
     } catch(Exception e){
-      JOptionPane.showMessageDialog(mainWindow, e.getMessage(), "Error opening" + currentlyOpenedFile, JOptionPane.ERROR_MESSAGE);
+      JOptionPane.showMessageDialog(mainWindow, e.getStackTrace(), "Error opening" + currentlyOpenedFile, JOptionPane.ERROR_MESSAGE);
     }
+    mainWindow.setTitle("JTextEditor - " + currentlyOpenedFile);
+
   }
 
   private void saveFile(){
     if(currentlyOpenedFile == ""){
-      JOptionPane.showMessageDialog(null, "No file opened");
-      return; // todo: delete this when create file is implemented
+      createFile();
     }
 
     dumpFileContents();

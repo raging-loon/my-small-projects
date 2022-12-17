@@ -10,8 +10,8 @@ public class EditorSettings implements ActionListener{
   public EditorSettings(JTextEditor j){
     settingsMenu = new JMenu("Settings");
 
-    fontPickerMenu = new JMenuItem("Pick Font");
-    uiPickerMenu = new JMenuItem("Pick UI Theme");
+    fontPickerMenu = new JMenuItem("Choose Font");
+    uiPickerMenu = new JMenuItem("Change UI Theme");
     wordWrapEnabledMenu = new JMenuItem("Word Wrap");
 
     fontPickerMenu.addActionListener(j);
@@ -28,7 +28,9 @@ public class EditorSettings implements ActionListener{
   public JMenuItem getUIPickerMenu() { return this.uiPickerMenu; }
   public JMenuItem getWordWrapEnabledMenuPickerMenu() { return this.wordWrapEnabledMenu; }
 
-  public void actionPerformed(ActionEvent e){
-    System.out.println("Settings menu: " + e.getSource().getClass().getName() + " was clicked");
+  public void actionPerformed(ActionEvent e) {
+    if (e.getSource() == fontPickerMenu) {
+      FontPicker fp = new FontPicker();
+    }
   }
 }

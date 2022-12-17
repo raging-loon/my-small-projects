@@ -1,0 +1,26 @@
+3+2/3*34
+
+PEMDAS
+
+(3+(2/(3*34)))
+
+(3+(2/102))
+(3+0)
+
+0
+
+3*3+9*3-2
+
+9+27-2
+36-2
+34
+
+NUMBER: 3 \
+OP_MULT     NUMBER: 9  \
+NUMBER: 3 /	        \
+OP_ADD			  NUMBER: 36              \		
+NUMBER: 9 \		          /	             \
+OP_MULT	    NUMBER: 27 /                \
+NUMBER: 3 /				 34
+OP_SUB		     			                    /
+NUMBER: 2------------------------------/ 

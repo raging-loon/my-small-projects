@@ -92,7 +92,7 @@ public class JTextEditor implements ActionListener {
       editorArea.setText(fileContents);
       mainWindow.setTitle("JTextEditor - " + fileName);
       currentlyOpenedFile = fileName;
-      
+
     }
   }
 
@@ -149,4 +149,13 @@ public class JTextEditor implements ActionListener {
     dumpFileContents();
 
   }
+
+
+  public void setEditorFont(Font font){
+    editorArea.setFont(font);
+  }
+
+
+
+
 }

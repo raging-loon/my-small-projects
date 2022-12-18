@@ -1,6 +1,7 @@
 #ifndef CALC_H
 #define CALC_H
 
+#include <stdbool.h>
 
 typedef enum token_type{
   INTEGER_LITERAL,
@@ -24,4 +25,5 @@ int lex_expr(char * expr, token * list, unsigned int * list_len);
 
 token_type parse_token(char * token);
 
+bool is_number(char * str);
 #endif /* CALC_H */

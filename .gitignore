@@ -73,3 +73,13 @@ CMakeFiles/
 CMakeCache.txt
 calc/Makefile
 
+# Rust
+**/target
+**/*.rs.bk
+
+/target
+**/*.rs.bk
+Cargo.lock
+/.idea/
+.vscode
+

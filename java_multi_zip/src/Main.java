@@ -2,22 +2,15 @@ import java.util.ArrayList;
 
 public class Main {
   public static void main(String[] args) {
-//    ArrayList<String> fileList = new ArrayList<>();
-//    String filename = "testfiles/pooh_batemen.png";
-//
-//    fileList.add(filename);
-//    String zipname = filename + ".gz";
-//
-//    gzip zip = new gzip();
-//
-//    if(zip.compressFiles(fileList, zipname) != ZipStatus.STATUS_OK){
-//      System.out.println("Failed to create archive");
-//    }
-    gunzip gz = new gunzip();
+    ArrayList<String> fileList = new ArrayList<>();
+    fileList.add("testfiles/java_multi_zip.iml");
+    fileList.add("testfiles/tux.png");
+    fileList.add("testfiles/pink_floyd_animals.png");
 
-    if(gz.decompressFile("testfiles/pooh_batemen.png.gz", false) != ZipStatus.STATUS_OK){
-      System.out.println("Failed to open archive");
+
+    Zip z = new Zip();
+    if(z.compressFiles(fileList, "test.zip") != ZipStatus.STATUS_OK){
+      System.out.println("Failed to create archive");
     }
-
   }
 }

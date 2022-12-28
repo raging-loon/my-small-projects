@@ -82,4 +82,5 @@ calc/Makefile
 Cargo.lock
 /.idea/
 .vscode
-
+*.dir
+Debug/

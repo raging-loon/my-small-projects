@@ -139,6 +139,28 @@ ServerError echosrv::listenSocket()
 }
 
 
+ServerError echosrv::run()
+{
+
+  while(true)
+  {
+    SOCKET clientSocket = accept(serverSocket, NULL, NULL);
+    if(clientSocket == INVALID_SOCKET) continue;
+
+
+  }
+}
+
+
+void echosrv::handleConnection(void * clientsocket)
+{
+  SOCKET * clientSocket = (SOCKET*)clientsocket;
+  
+
+}
+
+
+
 
 
 echosrv::~echosrv()

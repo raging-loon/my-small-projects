@@ -11,6 +11,8 @@ int main(){
   }
  
   printf("Successfully initialized echo server\n");
-  while(true){}
+
+  myServer->run();
+
   delete myServer;
 }

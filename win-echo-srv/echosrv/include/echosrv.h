@@ -10,6 +10,9 @@
 
 #pragma comment(lib, "Ws2_32.lib")
 
+#define MAX_CONNECTIONS         32
+
+
 enum class ServerError{
   OK,
   WSASTARTUP_ERROR,
@@ -20,8 +23,14 @@ enum class ServerError{
 };
 
 
-
 class echosrv{  
+
+  HANDLE connectionTable[MAX_CONNECTIONS];
+  DWORD tidTable[MAX_CONNECTIONS];
+
+  // connections count, 
+  unsigned int ccount = 0, tcount = 0;
+
   WSAData wsaData;
   
   SOCKET serverSocket = INVALID_SOCKET;
@@ -39,6 +48,9 @@ class echosrv{
   ServerError createSocket(char * portstr);
   ServerError bindSocket();
   ServerError listenSocket();
+
+  static void handleConnection(void * clientsocket);
+
 public:
   echosrv(unsigned int lport);
   ~echosrv();
@@ -48,6 +60,9 @@ public:
                                 { return last_server_error; }
 
   
+  ServerError run();
+
+
   char * get_err_msg();
 
 };

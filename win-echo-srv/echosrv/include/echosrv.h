@@ -16,15 +16,29 @@ enum class ServerError{
   FAILED_TO_LISTEN,
   FAILED_TO_CREATE_SOCKET,
   FAILED_TO_BIND,
+  FAILED_GETADDRINFO
 };
 
 
 
 class echosrv{  
   WSAData wsaData;
+  
+  SOCKET serverSocket = INVALID_SOCKET;
+
+  struct addrinfo * result = NULL,
+                  *ptr = NULL,
+                   hints;
+
   unsigned int port;
   unsigned int error_code;
+
+
   ServerError last_server_error;
+
+  ServerError createSocket(char * portstr);
+  ServerError bindSocket();
+  ServerError listenSocket();
 public:
   echosrv(unsigned int lport);
   ~echosrv();
@@ -33,6 +47,7 @@ public:
   ServerError get_server_error_code() 
                                 { return last_server_error; }
 
+  
   char * get_err_msg();
 
 };

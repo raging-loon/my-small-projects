@@ -147,20 +147,51 @@ ServerError echosrv::run()
     SOCKET clientSocket = accept(serverSocket, NULL, NULL);
     if(clientSocket == INVALID_SOCKET) continue;
 
-
+    handleConnection(&clientSocket);
   }
 }
 
-
+// THREADED FUNCTION
 void echosrv::handleConnection(void * clientsocket)
 {
   SOCKET * clientSocket = (SOCKET*)clientsocket;
-  
 
+  char recvbuf[512];
+  int ires, isres, recvbuflen = sizeof(recvbuf);
+
+  do{
+    memset(recvbuf, 0, recvbuflen);
+    ires = recv(*clientSocket, recvbuf, recvbuflen, 0);
+
+
+    if(ires > 0)
+    {
+      printf("recv: %s\n",recvbuf);
+    
+      send(*clientSocket, recvbuf, ires-2, 0);
+    
+    }
+    else if(ires == 0) {
+      // connection closed
+    }
+    else {
+      printf("Recv failed\n");
+      closesocket(*clientSocket);
+      return;
+    }
+
+
+  } while(ires > 0);
+  closesocket(*clientSocket);
 }
 
 
 
+void echosrv::closeConnection(SOCKET client)
+{
+  closesocket(client);
+  WSACleanup();
+}
 
 
 echosrv::~echosrv()

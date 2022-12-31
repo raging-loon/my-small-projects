@@ -48,8 +48,10 @@ class echosrv{
   ServerError createSocket(char * portstr);
   ServerError bindSocket();
   ServerError listenSocket();
-
+  static void closeConnection(SOCKET client);
   static void handleConnection(void * clientsocket);
+
+  void startNewClientThread(SOCKET client);
 
 public:
   echosrv(unsigned int lport);

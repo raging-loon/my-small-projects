@@ -164,6 +164,14 @@ mthreadFunction echosrv::handleConnection(void * clientdata)
   SOCKET clientSocket = dat->client;
   echosrv * srv = dat->srv;
 
+  sockaddr_in clientInfo;
+  int addrinSize = sizeof(sockaddr_in);
+  
+  getpeername(clientSocket, (sockaddr*)&clientInfo, &addrinSize);
+
+  printf("%s:%d\n",inet_ntoa(clientInfo.sin_addr), clientInfo.sin_port);
+
+
   char recvbuf[512];
   int ires, isres, recvbuflen = sizeof(recvbuf);
 
@@ -181,6 +189,8 @@ mthreadFunction echosrv::handleConnection(void * clientdata)
     }
     else if(ires == 0) {
       // connection closed
+      srv->closeConnection(clientSocket);
+      return 0;
     }
     else {
       printf("Recv failed\n");

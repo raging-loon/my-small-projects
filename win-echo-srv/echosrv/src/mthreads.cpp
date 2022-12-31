@@ -26,8 +26,6 @@ mthread mthreads::mCreateThread(mthreadFunction (*fn)(void*), void * args, tid *
     &ttid
   );
 
-  threadTable[threadCount++] = retHandle;
-  tidTable[threadCount++] = ttid;
 
   updateThreadTable(retHandle, ttid);
 
@@ -82,8 +80,8 @@ void mthreads::mDestroySingleThread(mthread thrd)
 
   CloseHandle(thrd);
 
-  threadTable[tIndex] == NULL;
-  tidTable[tIndex] == 0;
+  threadTable[tIndex] = NULL;
+  tidTable[tIndex] = 0;
 
 } 
 

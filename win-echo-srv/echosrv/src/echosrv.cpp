@@ -184,20 +184,22 @@ mthreadFunction echosrv::handleConnection(void * clientdata)
     }
     else {
       printf("Recv failed\n");
-      closesocket(clientSocket);
-      return;
+      srv->closeConnection(clientSocket);
+      return 1;
     }
 
 
   } while(ires > 0);
-  closesocket(clientSocket);
+  srv->closeConnection(clientSocket);
+
+  return 0;
 }
 
 
 
 void echosrv::closeConnection(SOCKET client)
 {
-  
+  threadTable.mDestroySingleThread(connectionList[client]);
   closesocket(client);
 
   WSACleanup();

@@ -27,7 +27,7 @@ class mthreads{
   unsigned int threadCount = 0;
 
   void updateThreadTable(mthread newThread, tid newTid);
-
+  int getThreadIndex(mthread target);
 
   public:
 

@@ -25,10 +25,6 @@ enum class ServerError{
   FAILED_GETADDRINFO
 };
 
-struct connectionData{
-  echosrv * srv;
-  SOCKET client;  
-};
 
 
 class echosrv{  
@@ -73,4 +69,9 @@ public:
 
   char * get_err_msg();
 
+};
+
+struct connectionData{
+  echosrv * srv;
+  SOCKET client;  
 };

@@ -29,6 +29,8 @@ mthread mthreads::mCreateThread(mthreadFunction (*fn)(void*), void * args, tid *
   threadTable[threadCount++] = retHandle;
   tidTable[threadCount++] = ttid;
 
+  updateThreadTable(retHandle, ttid);
+
   if(retTid) *retTid = ttid;
   return retHandle;
 }
@@ -58,9 +60,31 @@ void mthreads::updateThreadTable(mthread newThread, tid newTid)
 
 
 }
+
+int mthreads::getThreadIndex(mthread target)
+{
+  if(!target) return -1;
+  for(int i = 0; i < max_threads; i++)
+  {
+    if(threadTable[i] != NULL && threadTable[i] == target) return i;
+  }
+  return -1;
+}
+
+
 void mthreads::mDestroySingleThread(mthread thrd)
 {
+  if(!thrd) return;
+
+  int tIndex = getThreadIndex(thrd);
   
+  if(tIndex == -1) return;
+
+  CloseHandle(thrd);
+
+  threadTable[tIndex] == NULL;
+  tidTable[tIndex] == 0;
+
 } 
 
 

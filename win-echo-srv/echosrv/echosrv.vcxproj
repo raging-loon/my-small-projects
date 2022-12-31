@@ -315,6 +315,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   <ItemGroup>
     <ClCompile Include="C:\Users\coner\source\repos\my-small-projects\win-echo-srv\echosrv\src\main.cpp" />
     <ClCompile Include="C:\Users\coner\source\repos\my-small-projects\win-echo-srv\echosrv\src\echosrv.cpp" />
+    <ClCompile Include="C:\Users\coner\source\repos\my-small-projects\win-echo-srv\echosrv\src\mthreads.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="C:\Users\coner\source\repos\my-small-projects\win-echo-srv\echosrv\ZERO_CHECK.vcxproj">

@@ -7,6 +7,9 @@
 #include <windows.h>
 #include <WinSock2.h>
 #include <WS2tcpip.h>
+#include <map>
+
+#include "mthreads.h"
 
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -22,14 +25,17 @@ enum class ServerError{
   FAILED_GETADDRINFO
 };
 
+struct connectionData{
+  echosrv * srv;
+  SOCKET client;  
+};
+
 
 class echosrv{  
 
-  HANDLE connectionTable[MAX_CONNECTIONS];
-  DWORD tidTable[MAX_CONNECTIONS];
+  mthreads threadTable;
 
-  // connections count, 
-  unsigned int ccount = 0, tcount = 0;
+  std::map<SOCKET, mthread> connectionList;
 
   WSAData wsaData;
   
@@ -48,8 +54,7 @@ class echosrv{
   ServerError createSocket(char * portstr);
   ServerError bindSocket();
   ServerError listenSocket();
-  static void closeConnection(SOCKET client);
-  static void handleConnection(void * clientsocket);
+  static mthreadFunction handleConnection(void * clientsocket);
 
   void startNewClientThread(SOCKET client);
 
@@ -63,6 +68,7 @@ public:
 
   
   ServerError run();
+  void closeConnection(SOCKET client);
 
 
   char * get_err_msg();

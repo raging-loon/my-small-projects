@@ -4,7 +4,8 @@
 // more readable way of setting error codes
 #define SET_ERROR_CODES(errcode, server_error_code) error_code = errcode; last_server_error = server_error_code;
 
-echosrv::echosrv(unsigned int lport = 48876) : port(lport){}
+echosrv::echosrv(unsigned int lport = 48876) : port(lport), 
+                                               threadTable(MAX_CONNECTIONS){}
 
 ServerError echosrv::init()
 { 
@@ -147,28 +148,35 @@ ServerError echosrv::run()
     SOCKET clientSocket = accept(serverSocket, NULL, NULL);
     if(clientSocket == INVALID_SOCKET) continue;
 
-    handleConnection(&clientSocket);
+    connectionData tempConData = { this, clientSocket};
+    
+    mthread newThread = threadTable.mCreateThread(&handleConnection, &tempConData, NULL);    
+    
+    connectionList[clientSocket] = newThread;
+    
   }
 }
 
 // THREADED FUNCTION
-void echosrv::handleConnection(void * clientsocket)
+mthreadFunction echosrv::handleConnection(void * clientdata)
 {
-  SOCKET * clientSocket = (SOCKET*)clientsocket;
+  connectionData * dat = (connectionData *)clientdata;
+  SOCKET clientSocket = dat->client;
+  echosrv * srv = dat->srv;
 
   char recvbuf[512];
   int ires, isres, recvbuflen = sizeof(recvbuf);
 
   do{
     memset(recvbuf, 0, recvbuflen);
-    ires = recv(*clientSocket, recvbuf, recvbuflen, 0);
+    ires = recv(clientSocket, recvbuf, recvbuflen, 0);
 
 
     if(ires > 0)
     {
       printf("recv: %s\n",recvbuf);
     
-      send(*clientSocket, recvbuf, ires-2, 0);
+      send(clientSocket, recvbuf, ires-2, 0);
     
     }
     else if(ires == 0) {
@@ -176,20 +184,22 @@ void echosrv::handleConnection(void * clientsocket)
     }
     else {
       printf("Recv failed\n");
-      closesocket(*clientSocket);
+      closesocket(clientSocket);
       return;
     }
 
 
   } while(ires > 0);
-  closesocket(*clientSocket);
+  closesocket(clientSocket);
 }
 
 
 
 void echosrv::closeConnection(SOCKET client)
 {
+  
   closesocket(client);
+
   WSACleanup();
 }
 

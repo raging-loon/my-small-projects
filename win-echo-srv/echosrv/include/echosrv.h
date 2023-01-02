@@ -10,10 +10,12 @@
 #include <map>
 
 #include "mthreads.h"
+#include "mlog.h"
 
 #pragma comment(lib, "Ws2_32.lib")
 
 #define MAX_CONNECTIONS         32
+
 
 
 enum class ServerError{
@@ -44,15 +46,22 @@ class echosrv{
   unsigned int port;
   unsigned int error_code;
 
+  mlog * logger = nullptr;
+  
 
   ServerError last_server_error;
 
+  // these function just call the OS
   ServerError createSocket(char * portstr);
   ServerError bindSocket();
   ServerError listenSocket();
+
+
   static mthreadFunction handleConnection(void * clientsocket);
 
   void startNewClientThread(SOCKET client);
+
+  void logMessage(mlog_log_level l, std::string message);
 
 public:
   echosrv(unsigned int lport);
@@ -63,9 +72,14 @@ public:
                                 { return last_server_error; }
 
   
+  int setLogging(std::string filename, unsigned int flags);
+
   ServerError run();
   void closeConnection(SOCKET client);
 
+  // why implement these? Logging
+  int es_recv(SOCKET sock, char * buf, int buflen, int flags);
+  int es_send(SOCKET sock, const char * buf, int buflen, int flags);
 
   char * get_err_msg();
 

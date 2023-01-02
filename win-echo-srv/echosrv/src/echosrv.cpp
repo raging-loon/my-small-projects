@@ -4,9 +4,27 @@
 // more readable way of setting error codes
 #define SET_ERROR_CODES(errcode, server_error_code) error_code = errcode; last_server_error = server_error_code;
 
+
+using namespace std;
+/**
+ * Default constructor
+ * 
+ * @param lport port to listen on
+ * 
+*/
 echosrv::echosrv(unsigned int lport = 48876) : port(lport), 
                                                threadTable(MAX_CONNECTIONS){}
 
+
+/**
+ * Initialize the server. This includes:
+ *  1. Setting an environment if nec.
+ *  2. Creating the socket
+ *  3. Binding and listening
+ * 
+ * @returns an appropriate ServerError code
+ * 
+*/
 ServerError echosrv::init()
 { 
   int ires;
@@ -38,6 +56,12 @@ ServerError echosrv::init()
 }
 
 
+/**
+ * Get the last error message and convert it into a string
+ * 
+ * @returns said string
+ * 
+*/
 char * echosrv::get_err_msg()
 {
   switch(last_server_error){
@@ -52,7 +76,14 @@ char * echosrv::get_err_msg()
 }
 
 
-
+/**
+ * Internal socket creation function for easier porting
+ * and abstraction
+ * 
+ * @param portstr A string which is the port 
+ * 
+ * @returns an appropriate ServerError code
+*/
 ServerError echosrv::createSocket(char * portstr)
 {
   int res;
@@ -98,6 +129,12 @@ ServerError echosrv::createSocket(char * portstr)
   return ServerError::OK;
 }
 
+
+/**
+ * Internal binding function for abstraction and portablility
+ * 
+ * @returns an appropriate ServerError code
+*/
 ServerError echosrv::bindSocket()
 {
   int res;
@@ -123,6 +160,14 @@ ServerError echosrv::bindSocket()
   return ServerError::OK;
 }
 
+
+
+
+/**
+ * Internal listening function for portability and porting
+ * 
+ * @returns an appropriate ServerError code
+*/
 ServerError echosrv::listenSocket()
 {
   
@@ -139,7 +184,14 @@ ServerError echosrv::listenSocket()
   return ServerError::OK;
 }
 
-
+/**
+ * Actually accept connections
+ * 
+ * Starts up a new thread using mthreads and callign 
+ * echosrv::handleConnection
+ * 
+ * @returns an appropriate ServerError code
+*/
 ServerError echosrv::run()
 {
 
@@ -157,34 +209,50 @@ ServerError echosrv::run()
   }
 }
 
-// THREADED FUNCTION
+
+/**
+ * Actually send and receive data 
+ * 
+ * @param clientdata void ptr to a connectionData struct
+ * 
+*/
 mthreadFunction echosrv::handleConnection(void * clientdata)
 {
   connectionData * dat = (connectionData *)clientdata;
   SOCKET clientSocket = dat->client;
   echosrv * srv = dat->srv;
-
   sockaddr_in clientInfo;
-  int addrinSize = sizeof(sockaddr_in);
-  
+  int addrinSize = sizeof(sockaddr_in);  
+
+  // get ip info
   getpeername(clientSocket, (sockaddr*)&clientInfo, &addrinSize);
 
-  printf("%s:%d\n",inet_ntoa(clientInfo.sin_addr), clientInfo.sin_port);
+  // TODO: make this more efficient
+  char socketPair[64];
+  snprintf(socketPair, 64, "%s:%d", inet_ntoa(clientInfo.sin_addr), clientInfo.sin_port);
+
+  
+
+  srv->logMessage(mlog_log_level::ML_INFO, string(socketPair) + " new connection");
+
 
 
   char recvbuf[512];
   int ires, isres, recvbuflen = sizeof(recvbuf);
-
+  
+  
+  // main loop
   do{
     memset(recvbuf, 0, recvbuflen);
-    ires = recv(clientSocket, recvbuf, recvbuflen, 0);
+    ires = srv->es_recv(clientSocket, recvbuf, recvbuflen, 0);
 
 
     if(ires > 0)
     {
+      
       printf("recv: %s\n",recvbuf);
     
-      send(clientSocket, recvbuf, ires-2, 0);
+      srv->es_send(clientSocket, recvbuf, ires-2, 0);
     
     }
     else if(ires == 0) {
@@ -206,20 +274,86 @@ mthreadFunction echosrv::handleConnection(void * clientdata)
 }
 
 
-
+/**
+ * Close a client socket
+ * 
+ * @param client the client
+*/
 void echosrv::closeConnection(SOCKET client)
 {
   threadTable.mDestroySingleThread(connectionList[client]);
+  connectionList.erase(client);
   closesocket(client);
 
-  WSACleanup();
+  // WSACleanup(); // breaks the code
 }
+
+/**
+ * Set up logging, this ideally would be called after
+ * initialization.
+ * 
+ * @param filename name of the log file
+ * @param flags mlog constructor flags
+ * 
+ * @return 0 if success or logger already init.
+ * @return -1 if fail
+ * 
+*/
+int echosrv::setLogging(std::string filename, unsigned int flags)
+{
+  if(logger) return 0;
+
+  logger = new mlog(filename, flags);
+  
+  int status = logger->init();
+  
+  if(status == -1) delete logger;
+
+  return status;
+}
+
+
+/**
+ * Write a message if the logger exists
+ * 
+ * @param l log level
+ * @param message
+*/
+void echosrv::logMessage(mlog_log_level l, std::string message)
+{
+  if(logger) logger->write(l, message);
+}
+
+
+int echosrv::es_recv(SOCKET sock, char * buf, int buflen, int flags)
+{
+  int ret = recv(sock, buf, buflen, flags);
+
+
+  return ret;
+
+}
+
+
+int echosrv::es_send(SOCKET sock, const char * buf, int buflen, int flags)
+{
+  int ret = send(sock, buf, buflen, flags);
+
+  return ret;
+}
+
+
+
 
 
 echosrv::~echosrv()
 {
 
   if(result) freeaddrinfo(result);  
+  if(logger) delete logger;
   closesocket(serverSocket);
+
+  
+
   WSACleanup();  
 }

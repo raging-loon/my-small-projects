@@ -10,6 +10,10 @@ int main(){
     return 1;
   }
  
+  if(myServer->setLogging("serverlog.txt", mlog::INCLUDE_TIME) == -1)
+    printf("Failed to set up logging, continuing without\n");
+  
+
   printf("Successfully initialized echo server\n");
 
   myServer->run();

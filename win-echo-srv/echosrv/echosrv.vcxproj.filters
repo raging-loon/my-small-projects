@@ -10,6 +10,9 @@
     <ClCompile Include="C:\Users\coner\source\repos\my-small-projects\win-echo-srv\echosrv\src\mthreads.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\coner\source\repos\my-small-projects\win-echo-srv\echosrv\src\mlog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\coner\source\repos\my-small-projects\win-echo-srv\echosrv\CMakeLists.txt" />

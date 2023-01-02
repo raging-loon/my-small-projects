@@ -34,6 +34,7 @@ class echosrv{
   mthreads threadTable;
 
   std::map<SOCKET, mthread> connectionList;
+  std::map<SOCKET, std::string> socketList;
 
   WSAData wsaData;
   

@@ -9,7 +9,7 @@ while True:
   data_send = input(">")
   if data_send == "stop":
     break
-  sock.sendall(data_send.encode() + b'\r\n')
+  sock.sendall(data_send.encode())
 
   print(f"{sock.recv(1024)!r}")
 

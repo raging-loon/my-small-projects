@@ -202,8 +202,19 @@ ServerError echosrv::run()
 
     connectionData tempConData = { this, clientSocket};
     
+    // TODO: make this more efficient
+    sockaddr_in clientInfo;
+    int addrinSize = sizeof(sockaddr_in); 
+    // get ip info
+    getpeername(clientSocket, (sockaddr*)&clientInfo, &addrinSize);
+    char socketPair[64];
+    snprintf(socketPair, 64, "%s:%d", inet_ntoa(clientInfo.sin_addr), clientInfo.sin_port);
+    socketList[clientSocket] = string(socketPair);
+
+    logMessage(mlog_log_level::ML_INFO, socketList[clientSocket] + " new connection");
+
     mthread newThread = threadTable.mCreateThread(&handleConnection, &tempConData, NULL);    
-    
+
     connectionList[clientSocket] = newThread;
     
   }
@@ -221,38 +232,25 @@ mthreadFunction echosrv::handleConnection(void * clientdata)
   connectionData * dat = (connectionData *)clientdata;
   SOCKET clientSocket = dat->client;
   echosrv * srv = dat->srv;
-  sockaddr_in clientInfo;
-  int addrinSize = sizeof(sockaddr_in);  
 
-  // get ip info
-  getpeername(clientSocket, (sockaddr*)&clientInfo, &addrinSize);
-
-  // TODO: make this more efficient
-  char socketPair[64];
-  snprintf(socketPair, 64, "%s:%d", inet_ntoa(clientInfo.sin_addr), clientInfo.sin_port);
-
-  
-
-  srv->logMessage(mlog_log_level::ML_INFO, string(socketPair) + " new connection");
 
 
 
   char recvbuf[512];
-  int ires, isres, recvbuflen = sizeof(recvbuf);
+  int ires = 0, recvbuflen = sizeof(recvbuf);
   
   
   // main loop
   do{
     memset(recvbuf, 0, recvbuflen);
-    ires = srv->es_recv(clientSocket, recvbuf, recvbuflen, 0);
+    ires = srv->es_recv(clientSocket, recvbuf, recvbuflen, 0);  
 
+    
 
     if(ires > 0)
     {
-      
-      printf("recv: %s\n",recvbuf);
-    
-      srv->es_send(clientSocket, recvbuf, ires-2, 0);
+        
+      srv->es_send(clientSocket, recvbuf, ires, 0);
     
     }
     else if(ires == 0) {
@@ -261,7 +259,6 @@ mthreadFunction echosrv::handleConnection(void * clientdata)
       return 0;
     }
     else {
-      printf("Recv failed\n");
       srv->closeConnection(clientSocket);
       return 1;
     }
@@ -281,8 +278,11 @@ mthreadFunction echosrv::handleConnection(void * clientdata)
 */
 void echosrv::closeConnection(SOCKET client)
 {
+  logMessage(mlog_log_level::ML_INFO, socketList[client] + " disconnected");
+
   threadTable.mDestroySingleThread(connectionList[client]);
   connectionList.erase(client);
+  socketList.erase(client);
   closesocket(client);
 
   // WSACleanup(); // breaks the code
@@ -308,6 +308,7 @@ int echosrv::setLogging(std::string filename, unsigned int flags)
   int status = logger->init();
   
   if(status == -1) delete logger;
+  logMessage(mlog_log_level::ML_STATUS, "Server logging starting");
 
   return status;
 }
@@ -329,6 +330,7 @@ int echosrv::es_recv(SOCKET sock, char * buf, int buflen, int flags)
 {
   int ret = recv(sock, buf, buflen, flags);
 
+  logMessage(mlog_log_level::ML_INFO, socketList[sock] + " sent: " + buf);
 
   return ret;
 
@@ -348,7 +350,6 @@ int echosrv::es_send(SOCKET sock, const char * buf, int buflen, int flags)
 
 echosrv::~echosrv()
 {
-
   if(result) freeaddrinfo(result);  
   if(logger) delete logger;
   closesocket(serverSocket);

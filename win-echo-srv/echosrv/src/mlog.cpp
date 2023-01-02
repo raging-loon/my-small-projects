@@ -57,7 +57,7 @@ std::string mlog::getCurrentTime()
 
 void mlog::write(const mlog_log_level logLevel, std::string message)
 {
-  cout << getCurrentTime() << " "
+  output << getCurrentTime() << " "
        << logLevelToStr(logLevel) << " "
        << message << endl;
 }

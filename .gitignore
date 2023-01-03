@@ -84,3 +84,7 @@ Cargo.lock
 .vscode
 *.dir
 Debug/
+
+*.filters
+*.vcxproj
+*.sln

@@ -1,4 +1,5 @@
 from engine.error import ps_exit
+from engine.protocol import Protocol
 import argparse
 import ipaddress
 
@@ -24,14 +25,15 @@ class ps_options:
     parser.add_argument("-4","--ipv4", action="store_true", help="Scan IPv4")
     parser.add_argument("-6","--ipv6", action="store_true", help="Scan IPv6")
     parser.add_argument("-p","--ports", help="Ports")
-  
+    parser.add_argument("--tcp", action="store_true", help="Scan TCP Ports")
+
     self.arguments = parser.parse_args()
 
     if(self.arguments.ports == None):
       ps_exit("Need ports to scan", 1)
     else:
       self.parse_port_str(self.arguments.ports)
-      print(self.ports)
+      # print(self.ports)
 
     if(self.arguments.ipv4 == False and self.arguments.ipv6 == False):
       ps_exit("Must specify IPv4(-4) or IPv6(-6)", 1)
@@ -42,6 +44,10 @@ class ps_options:
       if(self.arguments.ipv4): self.parse_ipv4_addrs(self.arguments.ipaddrs)
       elif(self.arguments.ipv6): pass
 
+    if(self.arguments.tcp == None):
+      ps_exit("Need protocol to scan", 1)
+    else:
+      self.protocol = Protocol.TCP
 
 
 
@@ -87,7 +93,7 @@ class ps_options:
     elif ("/" in ipv4_addr_list): self.parse_ipv4_cidr(ipv4_addr_list)
     else: self.parse_ipv4_list(ipv4_addr_list)
 
-    print(self.ipv4addrs)
+    # print(self.ipv4addrs)
 
 
 

@@ -11,6 +11,8 @@ def main():
   scanner = engine.tcp_scan.TcpScan(global_options.ipv4addrs, global_options.ports)
 
   scanner.getPortGroups()
+
+  scanner.scan_host()
   
 
 if __name__ == '__main__':

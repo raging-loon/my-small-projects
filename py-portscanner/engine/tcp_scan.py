@@ -7,8 +7,9 @@ class TcpScan:
     self.hosts = hosts
     self.ports = ports
     self.port_groups = []
+    self.hosts_scanned = 0
   
-  def scan_single_port(self, host: str, port: int) -> bool:
+  def scan_single_port( host: str, port: int) -> bool:
     try:
       sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
       sock.connect((host,port))
@@ -34,3 +35,25 @@ class TcpScan:
         port_group.append(self.ports[len(self.ports)-1])
       self.port_groups.append(port_group)
     
+
+  def scan_host(self):
+    host: str = self.hosts[self.hosts_scanned]
+    self.hosts_scanned += 1
+
+    threads = []
+
+    for i in self.port_groups:
+      thrd = threading.Thread(target=TcpScan.scan_host_thread, kwargs={'host':host, 'ports':i})
+      threads.append(thrd)
+
+    for i in threads:
+      i.start()
+    
+    for i in threads:
+      i.join()
+
+    
+  def scan_host_thread(host, ports):
+    for i in ports:
+      if(TcpScan.scan_single_port(host,i)):
+        print("%s:%d"%(host,i))

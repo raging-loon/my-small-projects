@@ -3,6 +3,10 @@
 #include <stdio.h>
 #include <vector>
 #include <inttypes.h>
+#include <liboptions.h>
+
+
+#define NUM_NXS_OPTIONS     4
 
 class nxs_options{
   // singleton stuff
@@ -19,10 +23,12 @@ public:
   nxs_options(const nxs_options &) = delete;
   static nxs_options * get_instance();
 
-  int parse_options(const int argc, const char ** argv);
+  int parse(const int argc, const char ** argv);
 
 
 
 };
+
+extern option t_options[NUM_NXS_OPTIONS];
 
 
